@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mongodb:
+
+    container_name: mongodb
+    hostname: mongodb
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=testUser
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=test
+    ports:
+      - 27017:27017
+  contact:
+    working_dir: /app
+    restart: always
+    image: contact:1.0
+    volumes:
+      - ./contact-0.0.1-SNAPSHOT.jar:/app.jar
+      - ~/.m2:/root/.m2
+    ports:
+      - 8085:8085
+    command: mvn clean spring-boot:run
+    depends_on:
+      - mongodb
